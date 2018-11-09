@@ -1,0 +1,49 @@
+{
+  "name": "react-store-hook",
+  "version": "0.1.0",
+  "description": "Simple hooks-based state management for React",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rm -rf lib",
+    "build": "rollup -c",
+    "test": "jest",
+    "prepublish": "npm run clean && npm run build",
+    "example": "parcel example/index.html"
+  },
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+    "react",
+    "state",
+    "store",
+    "hooks"
+  ],
+  "author": "Tim Ermilov <yamalight@gmail.com> (http://codezen.net)",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/preset-env": "^7.1.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "jest": "^23.6.0",
+    "parcel": "^1.10.3",
+    "prettier": "^1.15.1",
+    "react": "^16.7.0-alpha.0",
+    "react-dom": "^16.7.0-alpha.0",
+    "react-test-renderer": "^16.7.0-alpha.0",
+    "rollup": "^0.67.0",
+    "rollup-plugin-babel": "^4.0.3"
+  },
+  "peerDependencies": {
+    "react": "^16.7.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  }
+}

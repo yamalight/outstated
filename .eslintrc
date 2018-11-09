@@ -1,0 +1,62 @@
+{
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["prettier"],
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "rules": {
+    "arrow-parens": "off",
+    "object-curly-spacing": ["warn", "never"],
+    "max-len": ["error", 120, 4],
+    "no-confusing-arrow": "warn",
+    "global-require": "off",
+    "no-underscore-dangle": "off",
+    "no-await-in-loop": "off",
+    "no-plusplus": "off",
+    "no-return-assign": "off",
+    "class-methods-use-this": "off",
+    "prefer-promise-reject-errors": "off",
+    "no-continue": "off",
+    "no-param-reassign": "off",
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "ignore"
+    }],
+    "import/prefer-default-export": "off",
+    "react/jsx-filename-extension": "off",
+    "react/prop-types": "off",
+    "react/sort-comp": "off",
+    "react/jsx-closing-bracket-location": "off",
+    "react/no-unescaped-entities": "warn",
+    "react/prefer-stateless-function": "off",
+    "react/button-has-type": "off",
+    "react/no-access-state-in-setstate": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "prettier/prettier": ["error", {
+      "trailingComma": "es5",
+      "singleQuote": true,
+      "bracketSpacing": false,
+      "jsxBracketSameLine": true,
+      "printWidth": 120
+    }]
+  }
+}
