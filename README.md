@@ -1,15 +1,13 @@
-# React-Store-Hook
+# Outstated
 
 > Simple hooks-based state management for React
 
 Like [unstated](https://github.com/jamiebuilds/unstated) but with hooks
 
-# ⚠️ Warning: React hooks are not part of a stable React release yet, so use this library only for experiments
-
 ## Installation
 
 ```sh
-npm install react-store-hook
+npm install outstated
 ```
 
 ## Example
@@ -17,7 +15,7 @@ npm install react-store-hook
 ```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Container, useStore} from 'react-store-hook';
+import {Container, useStore} from 'outstated';
 
 class CounterContainer extends Container {
   state = {
@@ -59,13 +57,13 @@ For more examples, see the `example/` directory.
 [Unstated](https://github.com/jamiebuilds/unstated) is awesome, but doesn't really use hooks.  
 Can we build something similar to unstated with hooks to make something even nicer?
 
-### Introducing React-Store-Hook
+### Introducing Outstated
 
 I really like unstated. I really like hooks.
 I wanted a simple hook-based app state management solution.
-This is why I've built React-Store-Hook.
+This is why I've built Outstated.
 
-React-Store-Hook is built on top of React components, context and hooks
+Outstated is built on top of React components, context and hooks
 and patterns surrounding those elements.
 
 It has three pieces:
@@ -145,7 +143,7 @@ function Counter() {
 
 ##### `<Provider>`
 
-The final optional piece that React-Store-Hook has is `<Provider>` component.
+The final optional piece that Outstated has is `<Provider>` component.
 It uses context to pass a given store instance to all the components down the tree.
 
 ```jsx
