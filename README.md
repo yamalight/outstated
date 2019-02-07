@@ -2,7 +2,7 @@
 
 > Simple hooks-based state management for React
 
-[![Build Status](https://travis-ci.org/yamalight/outstated.svg?branch=master)](https://travis-ci.org/yamalight/outstated)
+[![Build Status](https://travis-ci.com/yamalight/outstated.svg?branch=master)](https://travis-ci.com/yamalight/outstated)
 [![Coverage Status](https://coveralls.io/repos/github/yamalight/outstated/badge.svg?branch=master)](https://coveralls.io/github/yamalight/outstated?branch=master)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
