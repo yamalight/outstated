@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.com/yamalight/outstated.svg?branch=master)](https://travis-ci.com/yamalight/outstated)
 [![Coverage Status](https://coveralls.io/repos/github/yamalight/outstated/badge.svg?branch=master)](https://coveralls.io/github/yamalight/outstated?branch=master)
+[![Minzip Size](https://img.shields.io/bundlephobia/minzip/outstated.svg?style=flat)](https://www.npmjs.com/package/outstated)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
 Like [unstated](https://github.com/jamiebuilds/unstated) but with hooks
