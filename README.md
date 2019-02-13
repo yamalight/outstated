@@ -147,7 +147,7 @@ tests and assert different things about them very easily.
 import {act, testHook} from 'react-testing-library';
 
 test('counter', async () => {
-  let count, increment;
+  let count, increment, decrement;
   testHook(() => ({count, increment, decrement} = counterStore()));
 
   expect(count).toBe(0);
