@@ -120,7 +120,7 @@ function Counter() {
 
 ##### `<Provider>`
 
-The final optional piece that Outstated has is `<Provider>` component.
+The final piece that Outstated has is `<Provider>` component.
 It has two roles:
 
 1. It initializes global instances of given stores (this is required because React expects the number of hooks to be consistent across re-renders)
