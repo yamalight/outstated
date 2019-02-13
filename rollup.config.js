@@ -1,4 +1,6 @@
 import babel from 'rollup-plugin-babel';
+import cleanup from 'rollup-plugin-cleanup';
+import {terser} from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 export default {
@@ -10,5 +12,5 @@ export default {
     },
   ],
   external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
-  plugins: [babel()],
+  plugins: [babel(), cleanup(), terser()],
 };
