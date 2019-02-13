@@ -1,66 +1,40 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {createContext, useContext} from 'react';
 
 // Create context for global store assignment
-const ContainerContext = createContext();
+const StateContext = createContext();
 
-export const Provider = ({store, children}) => (
-  <ContainerContext.Provider value={store}>{children}</ContainerContext.Provider>
-);
+export const Provider = ({stores, children}) => {
+  // map that stores initialized versions of all user store hooks
+  const storesMap = new Map();
+  // complain if no instances provided for initialization
+  if (!stores || !stores.length) {
+    throw new Error('You must provide stores list to a <Provider> for initialization!');
+  }
+  // initialize store hooks
+  // this is required because react expects the same number
+  // of hooks to be called on each render
+  // so if we run init in useStore hook - it'll break on re-render
+  stores.forEach(store => {
+    storesMap.set(store, store());
+  });
+  // return provider with stores map
+  return <StateContext.Provider value={storesMap}>{children}</StateContext.Provider>;
+};
 
-export class Container {
-  state = {};
+export function useStore(storeInit) {
+  const map = useContext(StateContext);
 
-  _listeners = [];
-
-  setState = (updater, callback) => {
-    let nextState;
-
-    if (typeof updater === 'function') {
-      nextState = updater(this.state);
-    } else {
-      nextState = updater;
-    }
-
-    if (nextState == null) {
-      if (callback) callback();
-      return;
-    }
-
-    this.state = Object.assign({}, this.state, nextState);
-
-    // trigger state updates in registered hooks
-    this._listeners.forEach(listener => listener(this.state));
-  };
-
-  subscribe(listener) {
-    if (!this._listeners.includes(listener)) {
-      this._listeners.push(listener);
-    }
+  // complain if no map is given
+  if (!map) {
+    throw new Error('You must wrap your components with a <Provider>!');
   }
 
-  unsubscribe(listener) {
-    this._listeners = this._listeners.filter(l => l !== listener);
-  }
-}
+  const instance = map.get(storeInit);
 
-export function useStore(instance) {
-  // try to get instance from context
+  // complain if instance wasn't initialized
   if (!instance) {
-    instance = useContext(ContainerContext);
+    throw new Error('Provided store instance did not initialized correctly!');
   }
 
-  // if no instance is given - throw an error
-  if (!instance) {
-    throw new Error('You must provide a store instance!');
-  }
-
-  const [state, setState] = useState(instance.state);
-
-  // queue subscriber cleanup on component unmount
-  useEffect(() => () => instance.unsubscribe(setState), [instance]);
-
-  // subscribe to store changes
-  instance.subscribe(setState);
-
-  return [state, instance.setState, instance];
+  return instance;
 }

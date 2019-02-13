@@ -18,41 +18,39 @@ npm install outstated
 ## Example
 
 ```jsx
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-import {Container, useStore} from 'outstated';
+import {Provider, useStore} from 'outstated';
 
-class CounterContainer extends Container {
-  state = {
-    count: 0,
-  };
+const store = () => {
+  const [count, setCount] = useState(0);
 
-  increment = () => {
-    this.setState({count: this.state.count + 1});
-  };
+  const increment = () => setCount(count + 1);
+  const decrement = () => setCount(count - 1);
+  const reset = () => setCount(0);
 
-  decrement = () => {
-    this.setState({count: this.state.count - 1});
-  };
-}
-const counter = new CounterContainer();
+  return {count, increment, decrement, reset};
+};
 
 function Counter() {
-  const [state, setState] = useStore(counter);
-
-  const reset = () => setState({count: 0});
+  const {count, increment, decrement, reset} = useStore(store);
 
   return (
     <div>
-      <button onClick={counter.decrement}>-</button>
-      <span>{state.count}</span>
-      <button onClick={counter.increment}>+</button>
+      <button onClick={decrement}>-</button>
+      <span>{count}</span>
+      <button onClick={increment}>+</button>
       <button onClick={reset}>reset</button>
     </div>
   );
 }
 
-ReactDOM.render(<Counter />, document.getElementById('root'));
+ReactDOM.render(
+  <Provider stores={[store]}>
+    <Counter />
+  </Provider>,
+  document.getElementById('root')
+);
 ```
 
 For more examples, see the `example/` directory.
@@ -68,127 +66,97 @@ I really like unstated. I really like hooks.
 I wanted a simple hook-based app state management solution.
 This is why I've built Outstated.
 
-Outstated is built on top of React components, context and hooks
+Outstated is built on top of React hooks, context
 and patterns surrounding those elements.
 
 It has three pieces:
 
-##### `Container`
+##### `Store`
 
 It's a place to store our state and some of the logic for updating it.
 
-`Container` is a very simple class which is meant to look just like
-`React.Component` but with only the state-related bits: `this.state` and
-`this.setState`.
+Store is a very simple React hook (which means you can re-use it, use other hooks within it, etc).
 
 ```js
-class CounterContainer extends Container {
-  state = {count: 0};
-  increment = () => {
-    this.setState({count: this.state.count + 1});
-  };
-  decrement = () => {
-    this.setState({count: this.state.count - 1});
-  };
-}
+import {useState} from 'React';
+
+const store = () => {
+  const [state, setState] = useState({test: true});
+
+  const update = val => setState(val);
+
+  return {state, update};
+};
 ```
 
-Note that `Container`s are also event emitters that components subscribe to for updates.
+Note that stores use `useState` hook from React for managing state.
 When you call `setState` it triggers components to re-render,
-so be careful not to mutate `this.state` directly or your components won't re-render.
-
-###### `setState()`
-
-`setState()` in `Container` mimics React's `setState()` method as closely as
-possible.
-
-```js
-class CounterContainer extends Container {
-  state = {count: 0};
-  increment = () => {
-    this.setState(
-      state => {
-        return {count: state.count + 1};
-      },
-      () => {
-        console.log('Updated!');
-      }
-    );
-  };
-}
-```
+so be careful not to mutate `state` directly or your components won't re-render.
 
 ##### `useStore`
 
 Next we'll need a piece to introduce our state back into the tree so that:
 
 - When state changes, our components re-render.
-- We can depend on our container's state.
-- We can call methods on our container.
+- We can depend on our store state.
+- We can call functions exposed by the store.
 
-For this we have the `useStore` hook which allows us to pass our
-container instances and receive references to state, update function and
-the store itself (useful when passing the store using `Provider`).
+For this we have the `useStore` hook which allows us to get global store instances
+by using specific store constructor.
 
 ```jsx
 function Counter() {
-  const [state, setState, store] = useStore(counterStore);
+  const {count, decrement, increment} = useStore(counterStore);
 
   return (
     <div>
-      <span>{state.count}</span>
-      <button onClick={counterStore.decrement}>-</button>
-      <button onClick={counterStore.increment}>+</button>
+      <span>{count}</span>
+      <button onClick={decrement}>-</button>
+      <button onClick={increment}>+</button>
     </div>
   );
 }
 ```
 
-`useStore` will automatically construct our container and listen for changes.
-
 ##### `<Provider>`
 
 The final optional piece that Outstated has is `<Provider>` component.
-It uses context to pass a given store instance to all the components down the tree.
+It has two roles:
+
+1. It initializes global instances of given stores (this is required because React expects the number of hooks to be consistent across re-renders)
+2. It uses context to pass initialized instances of given stores to all the components down the tree
 
 ```jsx
 render(
-  <Provider store={counterStore}>
+  <Provider stores={[counterStore]}>
     <Counter />
   </Provider>
 );
 ```
 
-Once you'd wrapped your components with `<Provider>` you can simply use `useStore` hook without any arguments:
-
-```jsx
-function Counter() {
-  const [state, setState, store] = useStore();
-
-  return <div>{state.count}</div>;
-}
-```
-
 ### Testing
 
 Whenever we consider the way that we write the state in our apps we should be
-thinking about testing.
+thinking about testing.  
+We want to make sure that our state containers have a clean way to test them.
 
-We want to make sure that our state containers have a clean way
-
-Well because our containers are very simple classes, we can construct them in
+Because our containers are just hooks, we can construct them in
 tests and assert different things about them very easily.
 
 ```js
+import {act, testHook} from 'react-testing-library';
+
 test('counter', async () => {
-  let counter = new CounterContainer();
-  assert(counter.state.count === 0);
+  let count, increment;
+  testHook(() => ({count, increment, decrement} = counterStore()));
 
-  counter.increment();
-  assert(counter.state.count === 1);
+  expect(count).toBe(0);
 
-  counter.decrement();
-  assert(counter.state.count === 0);
+  act(() => increment());
+  expect(count).toBe(1);
+
+  act(() => decrement());
+  expect(count).toBe(0);
 });
 ```
 

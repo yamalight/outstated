@@ -1,34 +1,33 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-import {Container, useStore} from '../src';
+import {Provider, useStore} from '../src';
 
-class CounterContainer extends Container {
-  state = {count: 0};
+const store = () => {
+  const [count, setCount] = useState(0);
 
-  increment = () => {
-    this.setState({count: this.state.count + 1});
-  };
+  const increment = () => setCount(count + 1);
+  const decrement = () => setCount(count - 1);
+  const reset = () => setCount(0);
 
-  decrement = () => {
-    this.setState({count: this.state.count - 1});
-  };
-}
-
-const store = new CounterContainer();
+  return {count, increment, decrement, reset};
+};
 
 function Counter() {
-  const [state, setState, counter] = useStore(store);
-
-  const reset = () => setState({count: 0});
+  const {count, increment, decrement, reset} = useStore(store);
 
   return (
     <div>
-      <button onClick={counter.decrement}>-</button>
-      <span>{state.count}</span>
-      <button onClick={counter.increment}>+</button>
+      <button onClick={decrement}>-</button>
+      <span>{count}</span>
+      <button onClick={increment}>+</button>
       <button onClick={reset}>reset</button>
     </div>
   );
 }
 
-ReactDOM.render(<Counter />, window.simple);
+ReactDOM.render(
+  <Provider stores={[store]}>
+    <Counter />
+  </Provider>,
+  window.simple
+);

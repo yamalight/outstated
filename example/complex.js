@@ -1,46 +1,39 @@
 // @flow
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-import {Container, useStore} from '../src';
+import {Provider, useStore} from '../src';
 
-class AppContainer extends Container {
-  state = {
-    amount: 1,
-  };
-}
+const appStore = () => {
+  const [amount, setAmount] = useState(1);
 
-class CounterContainer extends Container {
-  state = {
-    count: 0,
-  };
+  return {amount, setAmount};
+};
 
-  increment = amount => {
-    this.setState({count: this.state.count + amount});
-  };
+const counterStore = () => {
+  const [count, setCount] = useState(0);
 
-  decrement = amount => {
-    this.setState({count: this.state.count - amount});
-  };
-}
+  const increment = amount => setCount(count + amount);
+  const decrement = amount => setCount(count - amount);
+  const reset = () => setCount(0);
 
-const appStore = new AppContainer();
-const counterStore = new CounterContainer();
+  return {count, increment, decrement, reset};
+};
 
 function Counter() {
-  const [appState] = useStore(appStore);
-  const [counterState, , counter] = useStore(counterStore);
+  const {amount} = useStore(appStore);
+  const {count, increment, decrement} = useStore(counterStore);
 
   return (
     <div>
-      <span>Count: {counterState.count}</span>
-      <button onClick={() => counter.decrement(appState.amount)}>-</button>
-      <button onClick={() => counter.increment(appState.amount)}>+</button>
+      <span>Count: {count}</span>
+      <button onClick={() => decrement(amount)}>-</button>
+      <button onClick={() => increment(amount)}>+</button>
     </div>
   );
 }
 
 function App() {
-  const [state, setState] = useStore(appStore);
+  const {amount, setAmount} = useStore(appStore);
 
   return (
     <div>
@@ -48,13 +41,18 @@ function App() {
       <label>Amount: </label>
       <input
         type="number"
-        value={state.amount}
+        value={amount}
         onChange={event => {
-          setState({amount: parseInt(event.target.value, 10)});
+          setAmount(parseInt(event.target.value, 10));
         }}
       />
     </div>
   );
 }
 
-ReactDOM.render(<App />, window.complex);
+ReactDOM.render(
+  <Provider stores={[appStore, counterStore]}>
+    <App />
+  </Provider>,
+  window.complex
+);
