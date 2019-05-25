@@ -3,6 +3,7 @@
   "version": "2.0.1",
   "description": "Simple hooks-based state management for React",
   "main": "lib/index.js",
+  "types": "index.d.ts",
   "scripts": {
     "clean": "rm -rf lib",
     "build": "rollup -c",
