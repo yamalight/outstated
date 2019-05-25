@@ -13,7 +13,8 @@
     "example": "parcel example/index.html"
   },
   "files": [
-    "lib"
+    "lib",
+    "index.d.ts"
   ],
   "keywords": [
     "react",
