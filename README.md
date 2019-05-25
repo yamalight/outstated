@@ -144,11 +144,11 @@ Because our containers are just hooks, we can construct them in
 tests and assert different things about them very easily.
 
 ```js
-import {act, testHook} from 'react-testing-library';
+import {renderHook, act} from 'react-hooks-testing-library';
 
 test('counter', async () => {
   let count, increment, decrement;
-  testHook(() => ({count, increment, decrement} = counterStore()));
+  renderHook(() => ({count, increment, decrement} = counterStore()));
 
   expect(count).toBe(0);
 
