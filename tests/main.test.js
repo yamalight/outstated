@@ -1,7 +1,8 @@
 /* eslint-env jest */
 /* global spyOn */
 import React, {useState} from 'react';
-import {act, cleanup, fireEvent, render, testHook} from 'react-testing-library';
+import {cleanup, fireEvent, render} from 'react-testing-library';
+import {renderHook, act} from 'react-hooks-testing-library';
 import {Provider, useStore} from '../src';
 
 const counterStore = () => {
@@ -39,7 +40,7 @@ afterEach(cleanup);
 
 test('should incresase/decrease state counter in hook', () => {
   let count, setCount;
-  testHook(() => ({count, setCount} = counterStore()));
+  renderHook(() => ({count, setCount} = counterStore()));
 
   expect(count).toBe(0);
 
