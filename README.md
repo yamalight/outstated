@@ -118,13 +118,21 @@ function Counter() {
 }
 ```
 
+##### `<Container>`
+
+It has two roles:
+
+1. It initializes global instances of given store (this is required because React expects the number of hooks to be consistent across re-renders)
+2. It uses context to pass initialized instances of given stores to all the components down the tree
+
+
 ##### `<Provider>`
 
 The final piece that Outstated has is `<Provider>` component.
-It has two roles:
 
-1. It initializes global instances of given stores (this is required because React expects the number of hooks to be consistent across re-renders)
-2. It uses context to pass initialized instances of given stores to all the components down the tree
+1. It initializes different contexts for each store
+2. It initializes `<Container>` components according to contexts initializes before (this is required not to make unnecessary re-render to component which relies on Store A after Store B was changed)
+3. It nests `<Container>` components' list and returns the tree
 
 ```jsx
 render(
