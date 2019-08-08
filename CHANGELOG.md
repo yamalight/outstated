@@ -1,3 +1,9 @@
+# 3.0.0 / 2019-08-08
+
+- Stores will now automatically use different contexts (thanks to @alexandrius, see #12)  
+  This change is 100% backwards compatible and in most cases it should be safe to update.
+  But considering possible impact it might have on existing apps with many stores - it's a major release.
+
 # 2.1.0 / 2019-05-25
 
 - Add typescript support
