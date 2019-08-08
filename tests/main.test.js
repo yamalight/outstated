@@ -1,9 +1,9 @@
 /* eslint-env jest */
 /* global spyOn */
-import React, { useState } from 'react';
-import { cleanup, fireEvent, render } from 'react-testing-library';
-import { renderHook, act } from 'react-hooks-testing-library';
-import { Provider, useStore } from '../src';
+import React, {useState} from 'react';
+import {cleanup, fireEvent, render} from '@testing-library/react';
+import {renderHook, act} from '@testing-library/react-hooks';
+import {Provider, useStore} from '../src';
 
 const oddsStore = () => {
   const [count, setCount] = useState(1);
@@ -11,7 +11,7 @@ const oddsStore = () => {
   const increment = (amount = 2) => setCount(count + amount);
   const decrement = (amount = 2) => setCount(count - amount);
 
-  return { count, setCount, increment, decrement };
+  return {count, setCount, increment, decrement};
 };
 
 const evensStore = () => {
@@ -20,54 +20,66 @@ const evensStore = () => {
   const increment = (amount = 2) => setCount(count + amount);
   const decrement = (amount = 2) => setCount(count - amount);
 
-  return { count, setCount, increment, decrement };
-}
+  return {count, setCount, increment, decrement};
+};
 
-const OddCounter = () => {
-  const { count, setCount, increment, decrement } = useStore(oddsStore);
+const OddCounter = jest.fn(() => {
+  const {count, setCount, increment, decrement} = useStore(oddsStore);
 
   const updateState = () => setCount(101);
 
-  console.log('Render');
-
   return (
     <div>
-      <span>Count Odd: <span data-testid='oddResult'>{count}</span></span>
-      <button data-testid='odd-' onClick={() => decrement()}>-</button>
-      <button data-testid='odd+' onClick={() => increment()}>+</button>
-      <button data-testid='oddSet' onClick={updateState}>set</button>
+      <span>
+        Count Odd: <span data-testid="oddResult">{count}</span>
+      </span>
+      <button data-testid="odd-" onClick={() => decrement()}>
+        -
+      </button>
+      <button data-testid="odd+" onClick={() => increment()}>
+        +
+      </button>
+      <button data-testid="oddSet" onClick={updateState}>
+        set
+      </button>
     </div>
   );
-};
+});
 
-const EvenCounter = () => {
-  const { count, setCount, increment, decrement } = useStore(evensStore);
+const EvenCounter = jest.fn(() => {
+  const {count, setCount, increment, decrement} = useStore(evensStore);
 
   const updateState = () => setCount(100);
 
-  console.log('Render');
-
   return (
     <div>
-      <span>Count Even: <span data-testid='evenResult'>{count}</span></span>
-      <button data-testid='even-' onClick={() => decrement()}>Even -</button>
-      <button data-testid='even+' onClick={() => increment()}>Even +</button>
-      <button data-testid='evenSet' onClick={updateState}>set</button>
+      <span>
+        Count Even: <span data-testid="evenResult">{count}</span>
+      </span>
+      <button data-testid="even-" onClick={() => decrement()}>
+        Even -
+      </button>
+      <button data-testid="even+" onClick={() => increment()}>
+        Even +
+      </button>
+      <button data-testid="evenSet" onClick={updateState}>
+        set
+      </button>
     </div>
   );
-};
+});
 
 const Counter = () => (
   <>
     <OddCounter />
     <EvenCounter />
   </>
-)
+);
 
-const brokenStore = () => { };
+const brokenStore = () => {};
 
 const BrokenCounter = () => {
-  const { state } = useStore(brokenStore);
+  const {state} = useStore(brokenStore);
   return <div>{state}</div>;
 };
 
@@ -75,7 +87,7 @@ afterEach(cleanup);
 
 test('should increase/decrease state counter in hook', () => {
   let count, setCount;
-  renderHook(() => ({ count, setCount } = oddsStore()));
+  renderHook(() => ({count, setCount} = oddsStore()));
 
   expect(count).toBe(1);
 
@@ -87,7 +99,7 @@ test('should increase/decrease state counter in hook', () => {
 
 test('should increase/decrease state counter in hook', () => {
   let count, setCount;
-  renderHook(() => ({ count, setCount } = evensStore()));
+  renderHook(() => ({count, setCount} = evensStore()));
 
   expect(count).toBe(0);
 
@@ -98,13 +110,11 @@ test('should increase/decrease state counter in hook', () => {
 });
 
 test('should increase/decrease state counter in container', () => {
-  const { getByTestId } = render(
+  const {getByTestId} = render(
     <Provider stores={[oddsStore, evensStore]}>
       <Counter />
     </Provider>
   );
-
-  spyOn(console, 'log');
 
   expect(getByTestId('oddResult').textContent).toBe('1');
   expect(getByTestId('evenResult').textContent).toBe('0');
@@ -131,7 +141,9 @@ test('should increase/decrease state counter in container', () => {
   fireEvent.click(getByTestId('evenSet'));
   expect(getByTestId('evenResult').textContent).toBe('100');
 
-  expect(console.log).toHaveBeenCalledTimes(10);
+  // expect components to be rendered initially + after 5 interactions
+  expect(OddCounter).toHaveBeenCalledTimes(6);
+  expect(EvenCounter).toHaveBeenCalledTimes(6);
 });
 
 test('should throw error when no provider is given', () => {

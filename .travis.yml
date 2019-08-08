@@ -3,4 +3,8 @@ language: node_js
 node_js:
   - stable
 
+script:
+  - npm test
+  - npm lint
+
 after_success: npm run coveralls

@@ -4,7 +4,7 @@ import {Provider, useStore} from '../src';
 
 // custom mouse position hook
 const useMousePosition = () => {
-  let [position, setPosition] = useState({x: null, y: null});
+  const [position, setPosition] = useState({x: null, y: null});
 
   const handleMouseMove = e => setPosition({x: e.pageX, y: e.pageY});
 
