@@ -1,3 +1,7 @@
+# 3.0.1 / 2019-08-11
+
+- Fix typo: initialized to initalize (thanks to @melvincarvalho)
+
 # 3.0.0 / 2019-08-08
 
 - Stores will now automatically use different contexts (thanks to @alexandrius, see #12)  
