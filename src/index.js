@@ -49,7 +49,7 @@ export function useStore(storeInit) {
 
   // complain if instance wasn't initialized
   if (!instance) {
-    throw new Error('Provided store instance did not initialized correctly!');
+    throw new Error('Provided store instance did not initialize correctly!');
   }
 
   return instance;

@@ -170,5 +170,5 @@ test('should throw error when store init fails', () => {
         <BrokenCounter />
       </Provider>
     )
-  ).toThrowError('Provided store instance did not initialized correctly!');
+  ).toThrowError('Provided store instance did not initialize correctly!');
 });
